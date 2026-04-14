@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Workplace Sandbox — 013</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.1/fabric.min.js"></script>
+</head>
+<body>
+
+<!-- ══ HERO SCREEN ══════════════════════════════════════ -->
+<div id="hero-screen">
+
+  <!-- corner metadata — top left -->
+  <div class="meta-corner top-left">
+    <span class="meta-day" id="meta-day">—</span>
+    <span class="meta-sep">——</span>
+    <span class="meta-date" id="meta-date">—</span>
+  </div>
+
+  <!-- corner metadata — top right -->
+  <div class="meta-corner top-right">
+    <span class="meta-year" id="meta-year">—</span>
+  </div>
+
+  <!-- hero content -->
+  <div class="hero-content">
+    <p class="hero-label">Workplace Planning Tool</p>
+    <h1 class="hero-headline">Designed for Work,<br><em>Built for You.</em></h1>
+    <p class="hero-sub">Upload a floor plan. Calibrate scale. Drag workplace<br>settings. Read live space insights.</p>
+
+    <div class="hero-cta">
+      <button class="cta-primary" id="hero-upload-btn">
+        <svg viewBox="0 0 16 16" fill="none"><path d="M8 10V3M5 6l3-3 3 3M3 12h10" stroke="currentColor" stroke-width="1"/></svg>
+        Upload Floor Plan
+      </button>
+      <button class="cta-ghost" id="hero-demo-btn">Load Demo Plan</button>
+    </div>
+  </div>
+
+  <!-- axis indicator — lower left like ref -->
+  <div class="axis-widget">
+    <svg viewBox="0 0 48 48" fill="none">
+      <line x1="24" y1="24" x2="40" y2="16" stroke="currentColor" stroke-width="0.8"/>
+      <line x1="24" y1="24" x2="8"  y2="16" stroke="currentColor" stroke-width="0.8"/>
+      <line x1="24" y1="24" x2="24" y2="44" stroke="currentColor" stroke-width="0.8"/>
+      <text x="42" y="18" font-size="5" fill="currentColor" font-family="JetBrains Mono">X</text>
+      <text x="2"  y="18" font-size="5" fill="currentColor" font-family="JetBrains Mono">Y</text>
+      <text x="22" y="48" font-size="5" fill="currentColor" font-family="JetBrains Mono">Z</text>
+    </svg>
+    <span>Isometric · 35°</span>
+  </div>
+
+  <!-- corner metadata — bottom left -->
+  <div class="meta-corner bottom-left">
+    <div class="brand-stamp">
+      <span>WS</span>
+      <span>·</span>
+      <span>SB</span>
+      <span class="stamp-dot">.</span>
+    </div>
+  </div>
+
+  <!-- corner metadata — bottom right -->
+  <div class="meta-corner bottom-right">
+    <span class="page-num">001</span>
+  </div>
+
+</div>
+
+<!-- ══ MAIN APP ═════════════════════════════════════════ -->
+<div id="app" class="hidden">
+
+  <!-- ── TOP BAR ──────────────────────────────────── -->
+  <header id="topbar">
+    <div class="topbar-left">
+      <span class="tb-day" id="tb-day">Sat</span>
+      <span class="tb-sep">——</span>
+      <span class="tb-date" id="tb-date">19 January</span>
+    </div>
+    <div class="topbar-center">
+      <span class="tb-title">Workplace Sandbox</span>
+    </div>
+    <div class="topbar-right">
+      <span class="tb-year" id="tb-year">2025</span>
+    </div>
+  </header>
+
+  <!-- ── WORKSPACE ────────────────────────────────── -->
+  <div id="workspace">
+
+    <!-- LEFT PANEL: Tools + Library -->
+    <aside id="panel-left">
+
+      <section class="panel-block">
+        <span class="panel-label">Forms</span>
+        <div class="forms-row">
+          <!-- Cube (active) -->
+          <button class="form-icon active" title="Box">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M12 3L21 8.5V15.5L12 21L3 15.5V8.5L12 3Z" stroke="currentColor" stroke-width="1"/><line x1="12" y1="3" x2="12" y2="21" stroke="currentColor" stroke-width="0.5" stroke-dasharray="2,2"/><line x1="3" y1="8.5" x2="21" y2="8.5" stroke="currentColor" stroke-width="0.5" stroke-dasharray="2,2"/></svg>
+          </button>
+          <button class="form-icon" title="Cylinder">
+            <svg viewBox="0 0 24 24" fill="none"><ellipse cx="12" cy="7" rx="7" ry="3" stroke="currentColor" stroke-width="1"/><line x1="5" y1="7" x2="5" y2="17" stroke="currentColor" stroke-width="1"/><line x1="19" y1="7" x2="19" y2="17" stroke="currentColor" stroke-width="1"/><ellipse cx="12" cy="17" rx="7" ry="3" stroke="currentColor" stroke-width="1"/></svg>
+          </button>
+          <button class="form-icon" title="Pyramid">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M12 3L21 19H3L12 3Z" stroke="currentColor" stroke-width="1"/><line x1="12" y1="3" x2="12" y2="19" stroke="currentColor" stroke-width="0.5" stroke-dasharray="2,2"/></svg>
+          </button>
+          <button class="form-icon" title="Scatter">
+            <svg viewBox="0 0 24 24" fill="none"><circle cx="5" cy="5" r="1.5" stroke="currentColor" stroke-width="1"/><circle cx="14" cy="8" r="1.5" stroke="currentColor" stroke-width="1"/><circle cx="8" cy="15" r="1.5" stroke="currentColor" stroke-width="1"/><circle cx="19" cy="17" r="1.5" stroke="currentColor" stroke-width="1"/></svg>
+          </button>
+        </div>
+      </section>
+
+      <section class="panel-block">
+        <span class="panel-label">Tools</span>
+        <div class="tool-list">
+          <button class="tool-row active" data-tool="select">
+            <span class="tool-icon-wrap">
+              <svg viewBox="0 0 16 16" fill="none"><path d="M3 2l10 6-5 1-2 5z" stroke="currentColor" stroke-width="1"/></svg>
+            </span>
+            <span>Select</span>
+          </button>
+          <button class="tool-row" data-tool="calibrate">
+            <span class="tool-icon-wrap">
+              <svg viewBox="0 0 16 16" fill="none"><line x1="2" y1="8" x2="14" y2="8" stroke="currentColor" stroke-width="1"/><line x1="2" y1="5" x2="2" y2="11" stroke="currentColor" stroke-width="1"/><line x1="14" y1="5" x2="14" y2="11" stroke="currentColor" stroke-width="1"/></svg>
+            </span>
+            <span>Calibrate</span>
+          </button>
+          <button class="tool-row" data-tool="rotate">
+            <span class="tool-icon-wrap">
+              <svg viewBox="0 0 16 16" fill="none"><path d="M8 3V1L5 4l3 3V5a4 4 0 110 8H4" stroke="currentColor" stroke-width="1"/></svg>
+            </span>
+            <span>Rotate</span>
+          </button>
+          <button class="tool-row danger" data-tool="delete">
+            <span class="tool-icon-wrap">
+              <svg viewBox="0 0 16 16" fill="none"><line x1="3" y1="4" x2="13" y2="4" stroke="currentColor" stroke-width="1"/><path d="M6 4V3h4v1M5 4l1 9h4l1-9" stroke="currentColor" stroke-width="1"/></svg>
+            </span>
+            <span>Delete</span>
+          </button>
+        </div>
+      </section>
+
+      <section class="panel-block panel-block-fill">
+        <span class="panel-label">Settings Library</span>
+
+        <div class="lib-category">Focus</div>
+        <div class="lib-item" draggable="true"
+             data-type="focus-1pax" data-seats="1" data-area="4"
+             data-kind="focus" data-label="1-Pax Focus Room" data-w="60" data-h="60">
+          <div class="lib-glyph">
+            <svg viewBox="0 0 28 28" fill="none"><rect x="4" y="4" width="20" height="20" stroke="currentColor" stroke-width="1"/><rect x="8" y="8" width="9" height="6" stroke="currentColor" stroke-width="0.7"/><line x1="12" y1="14" x2="12" y2="20" stroke="currentColor" stroke-width="0.7"/></svg>
+          </div>
+          <div class="lib-text">
+            <span class="lib-name">1-Pax Focus Room</span>
+            <span class="lib-spec">4 m² · 1 seat</span>
+          </div>
+        </div>
+
+        <div class="lib-item" draggable="true"
+             data-type="focus-2pax" data-seats="2" data-area="8"
+             data-kind="focus" data-label="2-Pax Focus Pod" data-w="80" data-h="60">
+          <div class="lib-glyph">
+            <svg viewBox="0 0 28 28" fill="none"><rect x="2" y="6" width="24" height="16" stroke="currentColor" stroke-width="1"/><rect x="5" y="9" width="8" height="5" stroke="currentColor" stroke-width="0.7"/><rect x="15" y="9" width="8" height="5" stroke="currentColor" stroke-width="0.7"/></svg>
+          </div>
+          <div class="lib-text">
+            <span class="lib-name">2-Pax Focus Pod</span>
+            <span class="lib-spec">8 m² · 2 seats</span>
+          </div>
+        </div>
+
+        <div class="lib-item" draggable="true"
+             data-type="phone-booth" data-seats="1" data-area="2"
+             data-kind="focus" data-label="Phone Booth" data-w="40" data-h="40">
+          <div class="lib-glyph">
+            <svg viewBox="0 0 28 28" fill="none"><rect x="8" y="3" width="12" height="22" stroke="currentColor" stroke-width="1"/><rect x="10" y="6" width="8" height="6" stroke="currentColor" stroke-width="0.7"/><circle cx="14" cy="20" r="1.5" stroke="currentColor" stroke-width="0.7"/></svg>
+          </div>
+          <div class="lib-text">
+            <span class="lib-name">Phone Booth</span>
+            <span class="lib-spec">2 m² · 1 seat</span>
+          </div>
+        </div>
+
+        <div class="lib-category">Collaborative</div>
+        <div class="lib-item" draggable="true"
+             data-type="meeting-4pax" data-seats="4" data-area="16"
+             data-kind="collaborative" data-label="4-Pax Meeting Room" data-w="100" data-h="80">
+          <div class="lib-glyph">
+            <svg viewBox="0 0 28 28" fill="none"><rect x="3" y="7" width="22" height="14" stroke="currentColor" stroke-width="1"/><ellipse cx="14" cy="14" rx="6" ry="4" stroke="currentColor" stroke-width="0.7"/><circle cx="8" cy="6" r="1.5" stroke="currentColor" stroke-width="0.7"/><circle cx="20" cy="6" r="1.5" stroke="currentColor" stroke-width="0.7"/><circle cx="8" cy="22" r="1.5" stroke="currentColor" stroke-width="0.7"/><circle cx="20" cy="22" r="1.5" stroke="currentColor" stroke-width="0.7"/></svg>
+          </div>
+          <div class="lib-text">
+            <span class="lib-name">4-Pax Meeting Room</span>
+            <span class="lib-spec">16 m² · 4 seats</span>
+          </div>
+        </div>
+
+        <div class="lib-item" draggable="true"
+             data-type="meeting-6pax" data-seats="6" data-area="24"
+             data-kind="collaborative" data-label="6-Pax Pod" data-w="120" data-h="90">
+          <div class="lib-glyph">
+            <svg viewBox="0 0 28 28" fill="none"><rect x="2" y="6" width="24" height="16" stroke="currentColor" stroke-width="1"/><ellipse cx="14" cy="14" rx="7" ry="4.5" stroke="currentColor" stroke-width="0.7"/><circle cx="7"  cy="5" r="1.3" stroke="currentColor" stroke-width="0.7"/><circle cx="14" cy="5" r="1.3" stroke="currentColor" stroke-width="0.7"/><circle cx="21" cy="5" r="1.3" stroke="currentColor" stroke-width="0.7"/><circle cx="7"  cy="23" r="1.3" stroke="currentColor" stroke-width="0.7"/><circle cx="14" cy="23" r="1.3" stroke="currentColor" stroke-width="0.7"/><circle cx="21" cy="23" r="1.3" stroke="currentColor" stroke-width="0.7"/></svg>
+          </div>
+          <div class="lib-text">
+            <span class="lib-name">6-Pax Pod</span>
+            <span class="lib-spec">24 m² · 6 seats</span>
+          </div>
+        </div>
+
+        <div class="lib-item" draggable="true"
+             data-type="boardroom-12pax" data-seats="12" data-area="48"
+             data-kind="collaborative" data-label="12-Pax Boardroom" data-w="160" data-h="110">
+          <div class="lib-glyph">
+            <svg viewBox="0 0 28 28" fill="none"><rect x="2" y="9" width="24" height="10" stroke="currentColor" stroke-width="1"/><line x1="2" y1="14" x2="26" y2="14" stroke="currentColor" stroke-width="0.4" stroke-dasharray="2,1"/><rect x="5" y="6" width="3" height="3" stroke="currentColor" stroke-width="0.7"/><rect x="12" y="6" width="3" height="3" stroke="currentColor" stroke-width="0.7"/><rect x="19" y="6" width="3" height="3" stroke="currentColor" stroke-width="0.7"/><rect x="5" y="19" width="3" height="3" stroke="currentColor" stroke-width="0.7"/><rect x="12" y="19" width="3" height="3" stroke="currentColor" stroke-width="0.7"/><rect x="19" y="19" width="3" height="3" stroke="currentColor" stroke-width="0.7"/></svg>
+          </div>
+          <div class="lib-text">
+            <span class="lib-name">12-Pax Boardroom</span>
+            <span class="lib-spec">48 m² · 12 seats</span>
+          </div>
+        </div>
+
+        <div class="lib-category">Amenity</div>
+        <div class="lib-item" draggable="true"
+             data-type="lounge" data-seats="6" data-area="20"
+             data-kind="collaborative" data-label="Lounge / Breakout" data-w="110" data-h="90">
+          <div class="lib-glyph">
+            <svg viewBox="0 0 28 28" fill="none"><path d="M4 18 Q4 11 10 11 L18 11 Q24 11 24 18 L24 22 L4 22Z" stroke="currentColor" stroke-width="1" fill="none"/><rect x="3" y="22" width="22" height="3" stroke="currentColor" stroke-width="0.7" fill="none"/><path d="M10 11 L10 8 Q10 7 11 7 L17 7 Q18 7 18 8 L18 11" stroke="currentColor" stroke-width="0.7" fill="none"/></svg>
+          </div>
+          <div class="lib-text">
+            <span class="lib-name">Lounge / Breakout</span>
+            <span class="lib-spec">20 m² · 6 seats</span>
+          </div>
+        </div>
+
+      </section>
+    </aside>
+
+    <!-- CANVAS -->
+    <div id="canvas-wrap">
+      <!-- calibration banner -->
+      <div id="cal-bar" class="hidden">
+        <span id="cal-step">Click Point A on a known wall</span>
+        <span id="cal-status"></span>
+        <button id="cal-cancel" class="tb-btn">Cancel</button>
+      </div>
+
+      <!-- upload overlay -->
+      <div id="upload-overlay">
+        <div class="upload-zone" id="drop-zone">
+          <svg class="upload-icon" viewBox="0 0 56 56" fill="none">
+            <rect x="6" y="12" width="44" height="34" stroke="currentColor" stroke-width="1"/>
+            <line x1="28" y1="24" x2="28" y2="38" stroke="currentColor" stroke-width="1"/>
+            <polyline points="22,30 28,24 34,30" stroke="currentColor" stroke-width="1" fill="none"/>
+            <line x1="18" y1="12" x2="18" y2="8" stroke="currentColor" stroke-width="1"/>
+            <line x1="38" y1="12" x2="38" y2="8" stroke="currentColor" stroke-width="1"/>
+            <line x1="18" y1="8" x2="38" y2="8" stroke="currentColor" stroke-width="1"/>
+          </svg>
+          <p class="upload-title">Drop floor plan here</p>
+          <p class="upload-sub">PNG · JPG · Max 20 MB</p>
+          <label class="cta-primary upload-label-btn">
+            Browse Files
+            <input type="file" id="file-input" accept="image/*" class="hidden" />
+          </label>
+        </div>
+      </div>
+
+      <canvas id="main-canvas"></canvas>
+
+      <!-- canvas bottom status bar -->
+      <div id="canvas-status">
+        <div class="status-axis">
+          <svg viewBox="0 0 32 32" fill="none" width="24" height="24">
+            <line x1="16" y1="16" x2="26" y2="10" stroke="currentColor" stroke-width="0.8"/>
+            <line x1="16" y1="16" x2="6"  y2="10" stroke="currentColor" stroke-width="0.8"/>
+            <line x1="16" y1="16" x2="16" y2="28" stroke="currentColor" stroke-width="0.8"/>
+            <text x="27" y="12" font-size="4" fill="currentColor" font-family="JetBrains Mono">X</text>
+            <text x="1"  y="12" font-size="4" fill="currentColor" font-family="JetBrains Mono">Y</text>
+          </svg>
+        </div>
+        <span class="status-label">Rotation</span>
+        <span class="status-value" id="status-rotation">0°</span>
+        <span class="status-sep">·</span>
+        <span class="status-label">Scale</span>
+        <span class="status-value" id="status-scale">Not calibrated</span>
+      </div>
+    </div>
+
+    <!-- RIGHT PANEL: Insights -->
+    <aside id="panel-right">
+
+      <!-- window chrome like ref top-right -->
+      <div class="panel-chrome">
+        <span>Insights</span>
+        <div class="chrome-btns">
+          <button class="chrome-btn" id="clear-all-btn" title="Clear all">—</button>
+          <button class="chrome-btn" id="export-btn" title="Export JSON">↓</button>
+        </div>
+      </div>
+
+      <section class="panel-block">
+        <span class="panel-label">Scale Calibration</span>
+        <div class="scale-readout">
+          <span class="scale-val" id="scale-display">—</span>
+          <span class="scale-unit">px/mm</span>
+        </div>
+        <button class="tb-btn-sm hidden" id="recalibrate-btn">Recalibrate</button>
+      </section>
+
+      <section class="panel-block">
+        <span class="panel-label">Headcount</span>
+        <div class="metric-big" id="metric-headcount">0</div>
+      </section>
+
+      <section class="panel-block">
+        <span class="panel-label">Occupancy Ratio</span>
+        <div class="metric-big" id="metric-ratio">—</div>
+        <div class="metric-sub" id="metric-ratio-sub">seats / floor area</div>
+      </section>
+
+      <section class="panel-block">
+        <span class="panel-label">Workplace Mix</span>
+        <div class="mix-row">
+          <span class="mix-label">Focus</span>
+          <div class="mix-track"><div class="mix-fill focus" id="bar-focus"></div></div>
+          <span class="mix-pct" id="pct-focus">0%</span>
+        </div>
+        <div class="mix-row">
+          <span class="mix-label">Collab</span>
+          <div class="mix-track"><div class="mix-fill collab" id="bar-collab"></div></div>
+          <span class="mix-pct" id="pct-collab">0%</span>
+        </div>
+      </section>
+
+      <section class="panel-block">
+        <span class="panel-label">Settings Count</span>
+        <div class="metric-big" id="metric-count">0</div>
+      </section>
+
+      <section class="panel-block panel-block-fill">
+        <span class="panel-label">Placed Elements</span>
+        <div id="placed-list">
+          <div class="placed-empty">No elements placed yet.</div>
+        </div>
+      </section>
+
+    </aside>
+
+  </div>
+
+  <!-- bottom corners -->
+  <div class="meta-corner bottom-left app-corner">
+    <div class="brand-stamp">
+      <span>WS</span><span>·</span><span>SB</span><span class="stamp-dot">.</span>
+    </div>
+  </div>
+  <div class="meta-corner bottom-right app-corner">
+    <span class="page-num">013</span>
+  </div>
+
+</div>
+
+<!-- ══ 3D MODAL ══════════════════════════════════════════ -->
+<div id="modal-3d" class="modal hidden">
+  <div class="modal-scrim" id="modal-scrim"></div>
+  <div class="modal-box">
+    <div class="modal-head">
+      <div>
+        <span class="modal-eyebrow">3D Preview · pCon Wireframe</span>
+        <h2 class="modal-title" id="modal-title">—</h2>
+      </div>
+      <button class="chrome-btn large" id="modal-close">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-viewport" id="modal-viewport">
+        <!-- SVG injected by JS -->
+      </div>
+      <div class="modal-specs" id="modal-specs"></div>
+    </div>
+    <div class="modal-foot">
+      Double-click any placed element to preview its spatial configuration.
+    </div>
+  </div>
+</div>
+
+<!-- ══ CALIBRATION MODAL ════════════════════════════════ -->
+<div id="modal-cal" class="modal hidden">
+  <div class="modal-scrim" id="modal-cal-scrim"></div>
+  <div class="modal-box modal-box-sm">
+    <div class="modal-head">
+      <div>
+        <span class="modal-eyebrow">Scale Calibration</span>
+        <h2 class="modal-title">Set Real-World Dimension</h2>
+      </div>
+      <button class="chrome-btn large" id="modal-cal-close">✕</button>
+    </div>
+    <div class="modal-body">
+      <p class="modal-desc">Enter the real-world length of the wall segment you measured, in millimetres. The pixel-to-mm ratio will be calculated automatically.</p>
+      <label class="cal-label">Wall Length (mm)</label>
+      <div class="cal-row">
+        <input type="number" id="cal-mm-input" placeholder="e.g. 3000" class="cal-field" />
+        <span class="cal-unit">mm</span>
+      </div>
+      <div class="cal-px-info" id="cal-px-info"></div>
+    </div>
+    <div class="modal-foot modal-foot-row">
+      <button class="cta-ghost" id="modal-cal-cancel">Cancel</button>
+      <button class="cta-primary" id="modal-cal-confirm">Apply Scale →</button>
+    </div>
+  </div>
+</div>
+
+<!-- hidden hero file input -->
+<input type="file" id="hero-file-input" accept="image/*" class="hidden" />
+
+<script src="app.js"></script>
+</body>
+</html>
